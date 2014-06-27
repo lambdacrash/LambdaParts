@@ -7,7 +7,7 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
-  , EmployeeProvider = require('./employeeprovider').EmployeeProvider;
+  , PartProvider = require('./partprovider').PartProvider;
 
 var app = express();
 
@@ -29,61 +29,61 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-var employeeProvider= new EmployeeProvider('localhost', 27017);
+var partProvider = new PartProvider('localhost', 27017);
 
 //Routes
 
 //index
 app.get('/', function(req, res){
-  employeeProvider.findAll(function(error, emps){
+  partProvider.findAll(function(error, emps){
       res.render('index', {
-            title: 'Employees',
-            employees:emps
+            title: 'Parts',
+            parts:emps
         });
   });
 });
 
-//new employee
-app.get('/employee/new', function(req, res) {
-    res.render('employee_new', {
-        title: 'New Employee'
+//new part
+app.get('/part/new', function(req, res) {
+    res.render('part_new', {
+        title: 'New Part'
     });
 });
 
-//save new employee
-app.post('/employee/new', function(req, res){
-    employeeProvider.save({
-        title: req.param('title'),
-        name: req.param('name')
+//save new part
+app.post('/part/new', function(req, res){
+    partProvider.save({
+        title: req.param('ref'),
+        descr: req.param('descr')
     }, function( error, docs) {
         res.redirect('/')
     });
 });
 
-//update an employee
-app.get('/employee/:id/edit', function(req, res) {
-	employeeProvider.findById(req.param('_id'), function(error, employee) {
-		res.render('employee_edit',
+//update an part
+app.get('/part/:id/edit', function(req, res) {
+	partProvider.findById(req.param('_id'), function(error, part) {
+		res.render('part_edit',
 		{ 
-			title: employee.title,
-			employee: employee
+			title: part.ref,
+			part: part
 		});
 	});
 });
 
-//save updated employee
-app.post('/employee/:id/edit', function(req, res) {
-	employeeProvider.update(req.param('_id'),{
-		title: req.param('title'),
-		name: req.param('name')
+//save updated part
+app.post('/part/:id/edit', function(req, res) {
+	partProvider.update(req.param('_id'),{
+		title: req.param('ref'),
+		descr: req.param('descr')
 	}, function(error, docs) {
 		res.redirect('/')
 	});
 });
 
-//delete an employee
-app.post('/employee/:id/delete', function(req, res) {
-	employeeProvider.delete(req.param('_id'), function(error, docs) {
+//delete an part
+app.post('/part/:id/delete', function(req, res) {
+	partProvider.delete(req.param('_id'), function(error, docs) {
 		res.redirect('/')
 	});
 });

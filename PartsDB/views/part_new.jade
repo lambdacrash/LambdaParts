@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    h1= title
+    div.newpart
+        form( method="post")
+            div
+                div
+                    span.label Ref :
+                    input(type="text", name="ref", id="editPartRef")
+                div
+                    span.label Description :
+                    input(type="text", name="descr", id="editPartDescr")
+                div
+                    span.label Brand :
+                    input(type="text", name="brand", id="editPartBrand")
+                div#editPartSubmit
+                    input(type="submit", value="Save")
+        a(href="/")!= "Back to Part List"

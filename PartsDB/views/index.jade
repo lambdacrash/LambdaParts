@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h1= title
+    #parts
+        - each part in parts
+          div.part
+            div.created_at= part.created_at
+            div.title= part.ref 
+            div.descr= part.descr
+                form( method="post", action="/part/:id/delete") 
+                    input(name="_id", type="hidden", value=part._id.toHexString()) 
+                    input(id="delete", value="X", type="submit")
+                form( method="get", action="/part/:id/edit") 
+                    input(name="_id", type="hidden", value=part._id.toHexString()) 
+                    input(id="edit", value="Edit", type="submit")
+        a(href="/part/new")!= "Add New Part"
