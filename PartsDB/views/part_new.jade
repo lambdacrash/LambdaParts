@@ -1,19 +1,54 @@
 extends layout
 
 block content
-    h1= title
-    div.newpart
-        form( method="post")
-            div
-                div
-                    span.label Ref :
-                    input(type="text", name="ref", id="editPartRef")
-                div
-                    span.label Description :
-                    input(type="text", name="descr", id="editPartDescr")
-                div
-                    span.label Brand :
-                    input(type="text", name="brand", id="editPartBrand")
-                div#editPartSubmit
-                    input(type="submit", value="Save")
-        a(href="/")!= "Back to Part List"
+	h1= title
+	div.container
+		div.row
+			form( method="post", role="form", class="form-horizontal")
+				div
+					div.form-group
+						div.col-sm-1
+							label(for="editPartRef")= "Ref"
+						div.col-sm-10
+							input(type="text", name="ref", id="editPartRef", placeholder="Reference", class="form-control" )
+					div.form-group
+						div.col-sm-1
+							label(for="editPartDescr")= "Descr"
+						div.col-sm-10
+							input(type="text", name="descr", id="editPartDescr", placeholder="Description", class="form-control" )
+					div.form-group
+						div.col-sm-1
+							label(for="editPartPack")= "Pack"
+						div.col-sm-10
+							select(type="text", name="pack", id="editPartPack", placeholder="Package", class="form-control")
+								- each pack in packages
+									option(value=pack.ref)= pack.ref
+					div.form-group
+						div.col-sm-1
+							label(for="editPartQty")= "Qty"
+						div.col-sm-10
+							input(type="number", name="qty", id="editPartQty", placeholder="Quantity", class="form-control" )
+					div.form-group
+						div.col-sm-1
+							label(for="editPartBox")= "Box"
+						div.col-sm-10
+							input(type="text", name="box", id="editPartBox", placeholder="Box", class="form-control" )
+					div.form-group
+						div.col-sm-1
+							label(for="editPartPrice")= "Price"
+						div.col-sm-10
+							input(type="text", name="price", id="editPartPrice", placeholder="Price", class="form-control" )
+					div.form-group
+						div.col-sm-1
+							label(for="editPartBrand")= "Brand"
+						div.col-sm-10
+							input(type="text", name="brand", id="editPartBrand", placeholder="Brand", class="form-control" )
+					div#editPartSubmit
+						input(type="submit", value="Save", class="btn btn-primary")
+		a(href="/")!= "Back to Part List"
+
+
+
+
+
+

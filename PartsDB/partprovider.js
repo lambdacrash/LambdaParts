@@ -4,9 +4,8 @@ var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
 
-PartProvider = function(host, port) {
-  this.db= new Db('node-mongo-part', new Server(host, port, {safe: true}, {auto_reconnect: true}, {}));
-  this.db.open(function(){});
+PartProvider = function(db) {
+  this.db=db;
 };
 
 

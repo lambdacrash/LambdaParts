@@ -2,19 +2,18 @@ extends layout
 
 block content
     h1= "Edit Part"
-    div.newpart
-        form( method="post")
-            input(name="_id", type="hidden", value=part._id.toHexString()) 
-            div
-                div
-                    span.label Ref :
-                    input(type="text", name="ref", id="editPartRef", value=part.ref)
-                div
-                    span.label Description :
-                    input(type="text", name="descr", id="editPartDescr", value=part.descr)
-                div
-                    span.label Brand :
-                    input(type="text", name="brand", id="editPartBrand", value=part.brand)
+    div.container
+        div.row
+            form(method="post", role="form", class="form-horizontal")
+                input(name="_id", type="hidden", value=part._id.toHexString()) 
+                - each p in props
+                    div.form-group
+                        div.col-sm-1
+                            label(for="editPart"+p.prop)= p.prop
+                        div.col-sm-10
+                            input(type="text", name=p.prop, id="editPart"+p.prop, value=p.val, class="form-control" )
                 div#editPartSubmit
-                    input(type="submit", value="Update")
+                    input(type="submit", value="Update", class="btn btn-primary")
         a(href="/")!= "Back to Part List"
+
+
