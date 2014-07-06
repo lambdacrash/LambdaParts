@@ -27,10 +27,11 @@ block content
                             td.brand= part.brand
                             td
                                 form( method="post", action="/part/:id/delete", class="float") 
-                                    input(name="_id", type="hidden", value=part._id.toHexString()) 
+                                    input(name="_id", type="hidden", value=part._id) 
                                     #[button(id="delete", type="submit", class="btn btn-primary") #[span.glyphicon.glyphicon-trash]] 
-                                #[a(href="part/"+part._id.toHexString()+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]
-                a(href="/part/new")!= "Add New Part"    
+                                #[a(href="part/"+part._id+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]
+                                #[a(href="part/"+part._id+"/view", id="view", class="btn btn-primary") #[span.glyphicon.glyphicon-eye-open]]
+                a(href="/wizard")!= "Add New Part"    
 
            
          

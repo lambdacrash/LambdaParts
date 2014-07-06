@@ -1,0 +1,62 @@
+extends layout
+
+block content
+	div.container
+		div.row
+			div.col-sm-12
+				a(href="/")!= "Back to Part List"	
+		div.row
+			if part.image
+				div.col-sm-5
+					img(src=part.image, width="150px")
+			div.col-sm-7
+				h1= part.ref
+				if part.brand
+					p= part.brand
+				if part.descr
+					p= part.descr
+		br
+		div.row
+			h2=	"Details"  
+			#parts.col-md-12
+				table.table.table-striped.table-hover
+					theader
+						td <strong>Reference</strong>
+						td <strong>Description</strong>
+						td <strong>Package</strong>
+						td <strong>Quantity</strong>
+						td <strong>Price</strong>
+						td <strong>Box</strong>
+						td <strong>Brand</strong>
+					tbody   
+						tr
+							td.ref= part.ref  
+							td.descr= part.descr
+							td.pack= part.pack 
+							td.qty= part.qty  
+							td.price= part.price
+							td.box= part.box  
+							td.brand= part.brand
+				#[a(href="/part/"+part._id+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]
+		br
+		if part.datasheets	
+			div.row
+				h2= "Datasheets"	
+				div.col-sm-12
+					table.table.table-hover
+						- each d in part.datasheets
+							tr
+								td= d.description
+								td
+									a(href=d.url)= d.url
+		br
+		if part.specs	
+			div.row
+				h2= "Specifications"	
+				div.col-sm-12
+					table.table.table-hover
+						- each attr in part.specs
+							tr
+								td.col-sm-3!= attr.attributeLabel
+								td.col-sm-3!= attr.attributeUnit
+								td.col-sm-6!= attr.attributeValue

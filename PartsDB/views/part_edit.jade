@@ -5,15 +5,16 @@ block content
     div.container
         div.row
             form(method="post", role="form", class="form-horizontal")
-                input(name="_id", type="hidden", value=part._id.toHexString()) 
+                input(name="_id", type="hidden", value= part._id) 
                 - each p in props
                     div.form-group
                         div.col-sm-1
                             label(for="editPart"+p.prop)= p.prop
                         div.col-sm-10
-                            input(type="text", name=p.prop, id="editPart"+p.prop, value=p.val, class="form-control" )
+                            input(type="text", name= p.prop, id="editPart"+p.prop, value= p.val, class="form-control" )
                 div#editPartSubmit
                     input(type="submit", value="Update", class="btn btn-primary")
+
         a(href="/")!= "Back to Part List"
 
 
