@@ -10,7 +10,10 @@
     "ejs"        : "0.8.5",
     "ejs-locals" : "1.0.2",
     "stylus": "*",
+    "request": "*",
     "jade": "1.0",
+    "crypto": "*",
+    "tingodb": "*",
     "twitter-bootstrap-node": "*",
     "mongodb": ">= 0.9.6-7"
   }

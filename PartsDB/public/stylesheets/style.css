@@ -2,7 +2,6 @@ body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   font-size: 13px;
-  text-align: center;
   text-stroke: 1px rgba(255,255,255,0.1);
   color: #555;
 }

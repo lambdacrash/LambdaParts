@@ -3,20 +3,24 @@
  */
 
  var express = require('express')
+ var request = require('request')
  var routes = require('./routes')
  , user = require('./routes/user')
  , http = require('http')
  , path = require('path')
  , PackageProvider = require('./packageprovider').PackageProvider
+ , ResultProvider = require('./resultprovider').ResultProvider
+ , engines = require('./engines').engines
  , PartProvider = require('./partprovider').PartProvider;
- var Db = require('mongodb').Db;
- var Connection = require('mongodb').Connection;
- var Server = require('mongodb').Server;
  var app = express();
  var host = "localhost"
  var port = 27017
- app.db= new Db('node-mongo-part', new Server(host, port, {safe: true}, {auto_reconnect: true}, {}));
- app.db.open(function(){});
+ var farnellapikey = "a6hmms7wrjnnhawpeffurqxz";
+ var farnelBaseImage = "http://fr.farnell.com/productimages/farnell/standard";
+ // app.db= new Db('node-mongo-part', new Server(host, port, {safe: true}, {auto_reconnect: true}, {}));
+ // app.db.open(function(){});
+ var tingo = require("tingodb")({});
+ app.db = new tingo.Db('./db/', {} );
 
  app.configure(function(){
  	app.set('port', process.env.PORT || 3000);
@@ -38,13 +42,21 @@
 
  var partProvider = new PartProvider(app.db);
  var packageProvider = new PackageProvider(app.db);
+ var resultProvider = new ResultProvider(app.db);
+ var engines = new engines();
 
 //Routes
 
 //index
 app.get('/', function(req, res){
 	partProvider.findAll(function(error, parts){
+		if( parts === undefined ){
+			parts = []
+		}
 		packageProvider.findAll(function(error, packs){
+			if( packs === undefined ){
+				packs = []
+			}
 			res.render('index', {
 				title: 'Parts',
 				parts:parts,
@@ -66,20 +78,80 @@ app.get('/packages/init', function(req, res){
 app.get('/packages/list', function(req, res){
 	packageProvider.findAll(function(error, packs){
 		res.setHeader('Content-Type', 'application/json');
-    	res.end(JSON.stringify(packs));
+		res.end(JSON.stringify(packs));
 	});
 });
 app.get('/packages/list/stringarray', function(req, res){
 	packageProvider.findAll(function(error, packs){
-		console.dir(packs)
 		res.setHeader('Content-Type', 'application/json');
 		var s = "["
 		for(p in packs){
 			s += "\""+packs[p].ref+"\","
 		}
 		s += "]"
-    	res.end(s);
+		res.end(s);
 	});
+});
+// clear all
+app.get('/clear/all', function(req, res){
+	partProvider.deleteAll(function(err){});
+	resultProvider.deleteAll(function(err){});
+	res.redirect('/')
+});
+// status
+app.get('/status', function(req, res){
+	partProvider.count(function(err, partcount){
+		packageProvider.count(function(err, packagecount){
+			resultProvider.count(function(err, resultcount){
+				res.setHeader('Content-Type', 'application/json');
+				res.end(JSON.stringify({ parts: partcount, packages: packagecount, results: resultcount}));
+			});
+		});
+	});
+});
+
+//result
+app.get('/result/:id/edit', function(req, res) {
+	resultProvider.findById(req.param('id'), function(error, part) {
+		partProvider.save(
+			part, 
+			function( error, docs) {
+				resultProvider.deleteSession(part.sid, function(error, result) {
+					res.redirect('/part/'+part._id+'/edit')
+				});
+			});
+
+	});
+});
+//wizard
+app.get('/wizard', function(req, res) {
+	res.render('wizard', {
+		title: 'Wizard',
+	});
+});
+
+//wizard
+app.post('/wizard', function(req, res) {
+	var search = {};
+	search.ref = req.param("ref");
+	search.brand = req.param("brand");
+	search.qty = req.param("qty");
+	search.box = req.param("box");
+	//search
+	engines.farnelSearch(search.ref, search.brand, search.qty, search.box, function(parts, error, url, sid){
+		// and render results
+		resultProvider.save(
+			parts
+			, function( error, docs) {
+				resultProvider.count(function(err, count){console.log("count "+count)}),
+				res.render('wizard', {
+					title: 'Wizard',
+					search: search,
+					parts: parts,
+				});
+			});
+	});
+	
 });
 
 //new part
@@ -107,7 +179,22 @@ app.post('/part/new', function(req, res){
 	});
 });
 
-//update an part
+//view a part
+app.get('/part/:id/view', function(req, res) {
+	var props = [];
+	partProvider.findById(req.param('id'), function(error, part) {
+		for(var p in part){
+			props.push({"prop":p, "val":part[p]})
+		}
+		res.render('part_view',
+		{ 
+			title: part.ref,
+			part: part,
+			props: props
+		});
+	});
+});
+//update a part
 app.get('/part/:id/edit', function(req, res) {
 	var props = [];
 	partProvider.findById(req.param('id'), function(error, part) {
@@ -125,19 +212,19 @@ app.get('/part/:id/edit', function(req, res) {
 
 //save updated part
 app.post('/part/:id/edit', function(req, res) {
-	console.dir(req.params)
-	partProvider.update(req.param('id'),
-	{
-		ref: req.param('ref'),
-		descr: req.param('descr'),
-		pack: req.param('pack'),
-		qty: req.param('qty'),
-		price: req.param('price'),
-		box: req.param('box'),
-		brand: req.param('brand')
-	}
-	, function(error, docs) {
-		res.redirect('/')
+	partProvider.findById(req.param('id'), function(error, part) {
+		part.ref= req.param('ref'),
+		part.descr= req.param('descr'),
+		part.pack= req.param('pack'),
+		part.qty= req.param('qty'),
+		part.price= req.param('price'),
+		part.box= req.param('box'),
+		part.brand= req.param('brand')
+		partProvider.update(req.param('id'),
+			part	
+			, function(error, docs) {
+				res.redirect('/')
+			});
 	});
 });
 

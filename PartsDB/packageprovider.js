@@ -40,6 +40,18 @@ PackageProvider.prototype.findById = function(id, callback) {
     });
 };
 
+//count results
+PackageProvider.prototype.count = function(callback) {
+    this.getCollection(function(error, package_collection) {
+      if( error ) callback(error)
+      else {
+        package_collection.find().toArray(function(error, results) {
+          if( error ) callback(error)
+          else callback(null, results.length)
+        });
+      }
+    });
+};
 
 //save new package
 PackageProvider.prototype.save = function(packages, callback) {
