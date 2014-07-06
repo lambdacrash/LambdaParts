@@ -1,5 +1,6 @@
  var crypto = require('crypto')
  var request = require('request');
+ var octopart = require("octopart");
 
  var farnelapikey = "a6hmms7wrjnnhawpeffurqxz";
  var farnelBaseImage = "http://fr.farnell.com/productimages/farnell/standard";
@@ -9,7 +10,8 @@
  var octopartapikey = "dc6360bd";
  var octopartBaseImage = "";
  var octopartUrl = "http://octopart.com/api/v3/parts/search?callback=?&apikey=";
- var octopartComplement = "&start=0&limit=25&q=";
+ var octopartComplement = "&start=0&limit=25";
+ octopart.apikey = octopartapikey;
 
  engines = function() {};
 
@@ -21,20 +23,61 @@
  }
 
  engines.prototype.octoSearch = function(ref, brand, qty, box, callback) {
-     var query = encodeURIComponent(ref + "+" + brand);
-     var url = this.createOctoUrl(query);
-     console.log(url)
-     request({
-         url: url,
-         json: true,
-         async: false,
-     }, function(error, response, body) {
-         var parts = [];
-         var sid = crypto.randomBytes(20).toString('hex');
-         if (!error && response.statusCode === 200) {
+     var queries = [{
+         reference: '1',
+         mpn_or_sku: ref,
+         brand: brand
+     }, ];
 
+     octopart.parts.match(queries, {
+         exact_only: true,
+         show: ['uid', 'mpn', 'manufacturer', 'short_description', 'descriptions', 'datasheets', 'reference_designs', 'cad_models', 'specs']
+     }).success(function(body) {
+         var uids = "";
+         var ids = [];
+         for (var i = 0; i < body.results.length; i++) {
+             console.log("Result", i, body.results[i].items);
+             console.log("-------------------------------")
+             console.dir(body.results[i].items)
+
+             for (var j = 0; j < body.results[i].items.length; j++) {
+                 console.log(body.results[i].items[j].uid)
+                 uids += "uid%5B%5D=" + body.results[i].items[j].uid + "&"
+                 ids.push(body.results[i].items[j].uid)
+             }
          }
-         callback(parts, error, url, sid);
+         octopart.parts.get(ids, {
+             exact_only: true,
+             show: ['uid', 'mpn', 'manufacturer', 'short_description', 'descriptions', 'datasheets', 'reference_designs', 'cad_models', 'specs']
+         }).success(function(body) {
+             console.log("OCTOPART")
+             console.dir(body)
+         }).failure(function(err) {
+             console.log(err)
+         })
+
+         uids = uids.substring(0, uids.length - 1);
+         var url = "http://octopart.com/api/v3/parts/get_multi/";
+         url += "?apikey=" + octopartapikey + "&";
+         url += uids
+         url += "&include[]=short_description";
+         url += "&include[]=descriptions";
+         url += "&include[]=reference_designs";
+         url += "&include[]=specs";
+         url += "&include[]=cad_models";
+         url += "&callback=?";
+         console.log(url)
+         request({
+             url: url,
+             json: true,
+         }, function(err, response, body) {
+             var b = body.substring(2)
+             b = b.substring(0, b.length - 1)
+             console.dir(b)
+             console.dir(JSON.parse(b))
+         })
+     }).failure(function(err) {
+         console.log("Ooops....", err);
      });
  }
 
@@ -73,7 +116,7 @@
                          "vendor": body.keywordSearchReturn.products[i].vendorName,
                          "datasheets": body.keywordSearchReturn.products[i].datasheets,
                          "descr": body.keywordSearchReturn.products[i].displayName,
-                         "specs": body.keywordSearchReturn.products[i]["attributes"],
+                         "specs": body.keywordSearchReturn.products[i]["attributes "],
                          "image": farnelBaseImage + body.keywordSearchReturn.products[i].image.baseName,
                      });
                  }

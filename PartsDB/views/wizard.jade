@@ -2,58 +2,57 @@ extends layout
 
 block content
 	h1= title
-	div.container
+	div.row
+		form( method="post", role="form", class="form-horizontal")
+			div
+				div.form-group
+					div.col-sm-1
+						label(for="editPartRef")= "Ref"
+					div.col-sm-10
+						if search
+							input(type="text", name="ref", id="editPartRef", value=search.ref, class="form-control" )
+						else
+							input(type="text", name="ref", id="editPartRef", placeholder="Reference", class="form-control" )
+				div.form-group
+					div.col-sm-1
+						label(for="editPartBrand")= "Brand"
+					div.col-sm-10
+						if search
+							input(type="text", name="brand", id="editPartBrand", value=search.brand, class="form-control" )
+						else
+							input(type="text", name="brand", id="editPartBrand", placeholder="Brand", class="form-control" )
+				div.form-group
+					div.col-sm-1
+						label(for="editPartQty")= "Quantity"
+					div.col-sm-10
+						if search
+							input(type="text", name="qty", id="editPartQty", value=search.qty, class="form-control" )
+						else
+							input(type="text", name="qty", id="editPartQty", placeholder="Qty", class="form-control" )
+				div.form-group
+					div.col-sm-1
+						label(for="editPartBox")= "Box"
+					div.col-sm-10
+						if search
+							input(type="text", name="box", id="editPartBox", value=search.box, class="form-control" )
+						else
+							input(type="text", name="box", id="editPartBox", placeholder="Box", class="form-control" )
+				div#editWizardSubmit
+					input(type="submit", value="Search", class="btn btn-primary")
+	if parts
 		div.row
-			form( method="post", role="form", class="form-horizontal")
-				div
-					div.form-group
-						div.col-sm-1
-							label(for="editPartRef")= "Ref"
-						div.col-sm-10
-							if search
-								input(type="text", name="ref", id="editPartRef", value=search.ref, class="form-control" )
-							else
-								input(type="text", name="ref", id="editPartRef", placeholder="Reference", class="form-control" )
-					div.form-group
-						div.col-sm-1
-							label(for="editPartBrand")= "Brand"
-						div.col-sm-10
-							if search
-								input(type="text", name="brand", id="editPartBrand", value=search.brand, class="form-control" )
-							else
-								input(type="text", name="brand", id="editPartBrand", placeholder="Brand", class="form-control" )
-					div.form-group
-						div.col-sm-1
-							label(for="editPartQty")= "Quantity"
-						div.col-sm-10
-							if search
-								input(type="text", name="qty", id="editPartQty", value=search.qty, class="form-control" )
-							else
-								input(type="text", name="qty", id="editPartQty", placeholder="Qty", class="form-control" )
-					div.form-group
-						div.col-sm-1
-							label(for="editPartBox")= "Box"
-						div.col-sm-10
-							if search
-								input(type="text", name="box", id="editPartBox", value=search.box, class="form-control" )
-							else
-								input(type="text", name="box", id="editPartBox", placeholder="Box", class="form-control" )
-					div#editWizardSubmit
-						input(type="submit", value="Search", class="btn btn-primary")
-		if parts
-			div.row
-				div.col-sm-12
-					table.table.table-striped.table-hover
-						theader
-							td <strong>Reference</strong>
-							td <strong>Description</strong>
-							td <strong>Brand</strong>
-							td <strong></strong>
-						tbody  
-							- each p in parts
-								tr
-									td= p.ref
-									td= p.descr
-									td= p.brand
-									td
-										#[a(href="result/"+p._id+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]
+			div.col-sm-12
+				table.table.table-striped.table-hover
+					theader
+						td <strong>Reference</strong>
+						td <strong>Description</strong>
+						td <strong>Brand</strong>
+						td <strong></strong>
+					tbody  
+						- each p in parts
+							tr
+								td= p.ref
+								td= p.descr
+								td= p.brand
+								td
+									#[a(href="result/"+p._id+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]

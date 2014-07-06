@@ -1,37 +1,35 @@
 extends layout
 
 block content
-    div.container
-        div.row
-            h1=title
-            #parts.col-md-12
-                table.table.table-striped.table-hover
-                    theader
-                        td <strong>Reference</strong>
-                        td <strong>Description</strong>
-                        td <strong>Package</strong>
-                        td <strong>Quantity</strong>
-                        td <strong>Price</strong>
-                        td <strong>Box</strong>
-                        td <strong>Brand</strong>
-                        td <strong>Actions</strong> 
-                    tbody   
-                    - each part in parts
-                        tr
-                            td.ref= part.ref  
-                            td.descr= part.descr
-                            td.pack= part.pack 
-                            td.qty= part.qty  
-                            td.price= part.price
-                            td.box= part.box  
-                            td.brand= part.brand
-                            td
-                                form( method="post", action="/part/:id/delete", class="float") 
-                                    input(name="_id", type="hidden", value=part._id) 
-                                    #[button(id="delete", type="submit", class="btn btn-primary") #[span.glyphicon.glyphicon-trash]] 
-                                #[a(href="part/"+part._id+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]
-                                #[a(href="part/"+part._id+"/view", id="view", class="btn btn-primary") #[span.glyphicon.glyphicon-eye-open]]
-                a(href="/wizard")!= "Add New Part"    
+    div.row
+        h1=title
+        #parts.col-md-12
+            table.table.table-striped.table-hover
+                theader
+                    td <strong>Picture</strong>
+                    td <strong>Reference</strong>
+                    td <strong>Description</strong>
+                    td <strong>Package</strong>
+                    td <strong>Quantity</strong>
+                    td <strong>Box</strong>
+                    td <strong>Actions</strong> 
+                tbody   
+                - each part in parts
+                    tr
+                        td
+                            img(src=part.image, width="50px")
+                        td.ref= part.ref  
+                        td.descr= part.descr
+                        td.pack= part.pack 
+                        td.qty= part.qty  
+                        td.box= part.box  
+                        td
+                            form( method="post", action="/part/:id/delete", class="float") 
+                                input(name="_id", type="hidden", value=part._id) 
+                                #[button(id="delete", type="submit", class="btn btn-primary") #[span.glyphicon.glyphicon-trash]] 
+                            #[a(href="part/"+part._id+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]
+                            #[a(href="part/"+part._id+"/view", id="view", class="btn btn-primary") #[span.glyphicon.glyphicon-eye-open]]
+            a(href="/wizard")!= "Add New Part"    
 
            
          
