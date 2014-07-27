@@ -1,7 +1,7 @@
 /**
  * Module dependencies.
  */
-
+var targz = require('tar.gz');
 var express = require('express')
 var request = require('request')
 var routes = require('./routes'),
@@ -59,9 +59,14 @@ app.get('/', function(req, res) {
             if (packs === undefined) {
                 packs = []
             }
+            var count = 0;
+            for (var p in parts) {
+                count += parseInt(parts[p].qty);
+            }
             res.render('index', {
                 title: 'Parts',
                 parts: parts,
+                count: count,
                 packages: packs
             });
         });
@@ -392,7 +397,7 @@ app.post('/wizard', function(req, res) {
     search.qty = req.param("qty");
     search.box = req.param("box");
     //search
-    engines.farnelSearch(search.ref, search.brand, search.qty, search.box, function(parts, error, url, sid) {
+    engines.octoSearch(search.ref, search.brand, search.qty, search.box, function(parts, sid) {
         // engines.octoSearch(search.ref, search.brand, search.qty, search.box, function(parts, error, url, sid) {});
         // and render results
         resultProvider.save(
@@ -407,7 +412,26 @@ app.post('/wizard', function(req, res) {
                 });
             });
     });
-    engines.mouserSearch(search.ref, search.brand, search.qty, search.box, function(parts, error, url, sid) {});
+});
+
+//search
+app.post('/search', function(req, res) {
+    var query = req.param("term");
+    console.log(query);
+    partProvider.search(query, function(err, results) {
+        console.dir(err);
+        console.dir(results);
+        var count = 0;
+        for (var p in results) {
+            count += parseInt(results[p].qty);
+        }
+        res.render('index', {
+            title: 'Results',
+            parts: results,
+            count: count,
+            packages: []
+        });
+    })
 });
 
 //new part
@@ -417,6 +441,16 @@ app.get('/part/new', function(req, res) {
             title: 'New Part',
             packages: packs
         });
+    });
+});
+
+//backup
+app.get('/backup', function(req, res) {
+    var compress = new targz().compress('./db/', './db/db_' + new Date().getTime() + '.tar.gz', function(err) {
+        if (err)
+            console.log(err);
+        console.log('The compression has ended!');
+        res.redirect('/')
     });
 });
 
@@ -445,6 +479,7 @@ app.get('/part/:id/view', function(req, res) {
                 "val": part[p]
             })
         }
+        console.dir(part)
         res.render('part_view', {
             title: part.ref,
             part: part,

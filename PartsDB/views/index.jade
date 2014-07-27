@@ -3,6 +3,7 @@ extends layout
 block content
     div.row
         h1=title
+        p=parts.length + " references - "+count+" parts"
         #parts.col-md-12
             table.table.table-striped.table-hover
                 theader
@@ -16,19 +17,32 @@ block content
                 tbody   
                 - each part in parts
                     tr
-                        td
-                            img(src=part.image, width="50px")
-                        td.ref= part.ref  
+                        if part.images.large
+                            td.ref.col-sm-1
+                                img(src=part.images.large, width="45px")
+                        else if part.images.medium
+                            td.ref.col-sm-1
+                                img(src=part.images.medium, width="45px")
+                        else if part.images.swatch
+                            td.ref.col-sm-1
+                                img(src=part.images.swatch, width="45px")
+                        else
+                            td.ref.col-sm-1
+                                img(src="unavailable.gif", width="45px")
+                        td.ref.col-sm-1
+                            a(href="part/"+part._id+"/view")=part.ref  
                         td.descr= part.descr
-                        td.pack= part.pack 
-                        td.qty= part.qty  
-                        td.box= part.box  
-                        td
-                            form( method="post", action="/part/:id/delete", class="float") 
+                        td.pack.ref.col-sm-1= part.pack 
+                        td.qty.ref.col-sm-1= part.qty  
+                        td.box.ref.col-sm-1= part.box  
+                        td.ref.col-sm-1
+                            #[a(href="part/"+part._id+"/view", id="view", class="btn btn-sm btn-info") #[span.glyphicon.glyphicon-eye-open]]
+                            #[a(href="part/"+part._id+"/edit", id="edit", class="btn btn-sm btn-primary") #[span.glyphicon.glyphicon-pencil]]
+                            br
+                            br
+                            form( method="post", action="/part/:id/delete") 
                                 input(name="_id", type="hidden", value=part._id) 
-                                #[button(id="delete", type="submit", class="btn btn-primary") #[span.glyphicon.glyphicon-trash]] 
-                            #[a(href="part/"+part._id+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]
-                            #[a(href="part/"+part._id+"/view", id="view", class="btn btn-primary") #[span.glyphicon.glyphicon-eye-open]]
+                                #[button(id="delete", type="submit", class="btn btn-xs btn-danger") #[span.glyphicon.glyphicon-trash]] 
             a(href="/wizard")!= "Add New Part"    
 
            

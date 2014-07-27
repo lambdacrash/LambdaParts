@@ -29,57 +29,81 @@
          mpn_or_sku: ref,
          brand: brand
      }, ];
-
+     var sid = crypto.randomBytes(20).toString('hex');
      octopart.parts.match(queries, {
          exact_only: true,
-         show: ['uid', 'mpn', 'manufacturer', 'short_description', 'descriptions', 'datasheets', 'reference_designs', 'cad_models', 'specs']
+         include: ['uid',
+             'mpn',
+             'manufacturer',
+             'short_description',
+             'descriptions',
+             'datasheets',
+             'reference_designs',
+             'cad_models',
+             'category_uids',
+             'external_links',
+             'imagesets',
+             'specs'
+         ]
      }).success(function(body) {
          var uids = "";
          var ids = [];
+         var parts = [];
          for (var i = 0; i < body.results.length; i++) {
-             console.log("Result", i, body.results[i].items);
-             console.log("-------------------------------")
-             console.dir(body.results[i].items)
-
              for (var j = 0; j < body.results[i].items.length; j++) {
                  console.log(body.results[i].items[j].uid)
-                 uids += "uid%5B%5D=" + body.results[i].items[j].uid + "&"
-                 ids.push(body.results[i].items[j].uid)
+                 ids.push(body.results[i].items[j].uid);
+                 var part = body.results[i].items[j];
+                 var id = crypto.randomBytes(20).toString('hex');
+                 var descriptions = [];
+                 var cad_models = [];
+                 var images = {};
+                 if (part.descriptions) {
+                     for (var k = 0; k < part.descriptions.length; k++) {
+                         descriptions.push(part.descriptions[k].value)
+                     }
+                 }
+                 if (part.cad_models) {
+                     for (var k = 0; k < part.cad_models.length; k++) {
+                         cad_models.push(part.cad_models[k])
+                     }
+                 }
+                 if (part.imagesets && part.imagesets.length > 0) {
+                     if (part.imagesets[0].large_image)
+                         images["large"] = part.imagesets[0].large_image.url
+                     if (part.imagesets[0].medium_image)
+                         images["medium"] = part.imagesets[0].medium_image.url
+                     if (part.imagesets[0].swatch_image)
+                         images["swatch"] = part.imagesets[0].swatch_image.url
+                 }
+
+                 parts.push({
+                     "_id": id,
+                     "sid": sid,
+                     "qty": qty,
+                     "pack": "",
+                     "box": box,
+                     "ref": part.mpn,
+                     "brand": part.brand.name,
+                     "manufacturer": part.manufacturer.name,
+                     "descr": part.short_description,
+                     "product_url": part.external_links.product_url,
+                     "evalkit_url": part.external_links.evalkit_url,
+                     "freesample_url": part.external_links.freesample_url,
+                     "specs": part.specs,
+                     "descriptions": descriptions,
+                     "datasheets": part.datasheets,
+                     "reference_designs": part.reference_designs,
+                     "octopart_url": part.octopart_url,
+                     "images": images,
+                     "cad_models": cad_models,
+                 });
              }
          }
-         octopart.parts.get(ids, {
-             exact_only: true,
-             show: ['uid', 'mpn', 'manufacturer', 'short_description', 'descriptions', 'datasheets', 'reference_designs', 'cad_models', 'specs']
-         }).success(function(body) {
-             console.log("OCTOPART")
-             console.dir(body)
-         }).failure(function(err) {
-             console.log(err)
-         })
-
-         uids = uids.substring(0, uids.length - 1);
-         var url = "http://octopart.com/api/v3/parts/get_multi/";
-         url += "?apikey=" + octopartapikey + "&";
-         url += uids
-         url += "&include[]=short_description";
-         url += "&include[]=descriptions";
-         url += "&include[]=reference_designs";
-         url += "&include[]=specs";
-         url += "&include[]=cad_models";
-         url += "&callback=?";
-         console.log(url)
-         request({
-             url: url,
-             json: true,
-         }, function(err, response, body) {
-             var b = body.substring(2)
-             b = b.substring(0, b.length - 1)
-             console.dir(b)
-             console.dir(JSON.parse(b))
-         })
+         callback(parts, sid);
      }).failure(function(err) {
          console.log("Ooops....", err);
-     });
+     })
  }
 
  var clientParams = {
@@ -139,7 +163,7 @@
                  }
              }
          }
-         callback(parts, error, url, sid);
+         callback(parts, sid);
      });
  }
 

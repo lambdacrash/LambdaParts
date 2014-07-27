@@ -5,15 +5,30 @@ block content
 		div.col-sm-12
 			a(href="/")!= "Back to Part List"	
 	div.row
-		if part.image
+		if part.images
 			div.col-sm-5
-				img(src=part.image, width="150px")
+				if part.images.medium
+					img(src=part.images.medium, width="150px")
+				else if part.images.large
+					img(src=part.images.large, width="150px")
+				else if part.images.swatch
+					img(src=part.images.swatch, width="150px")
 		div.col-sm-7
 			h1= part.ref
 			if part.brand
 				p= part.brand
 			if part.descr
 				p= part.descr
+			p 
+				a(href="http://www.alldatasheet.com/view.jsp?Searchword="+part.ref)= "View part on All-Datasheets"
+			p 
+				a(href="http://search.datasheetcatalog.net/key/"+part.ref)= "View part on Datasheets Catalog"
+			if part.octopart_url
+				p
+					a(href=part.octopart_url)= "View part on OctoPart"
+			if part.product_url
+				p
+					a(href=part.product_url)= "View part on Vendor"
 	br
 	div.row
 		h2=	"Details"  
@@ -24,7 +39,6 @@ block content
 					td <strong>Description</strong>
 					td <strong>Package</strong>
 					td <strong>Quantity</strong>
-					td <strong>Price</strong>
 					td <strong>Box</strong>
 					td <strong>Brand</strong>
 				tbody   
@@ -33,7 +47,6 @@ block content
 						td.descr= part.descr
 						td.pack= part.pack 
 						td.qty= part.qty  
-						td.price= part.price
 						td.box= part.box  
 						td.brand= part.brand
 			#[a(href="/part/"+part._id+"/edit", id="edit", class="btn btn-primary") #[span.glyphicon.glyphicon-pencil]]
@@ -49,6 +62,15 @@ block content
 							td
 								a(href=d.url)= d.url
 	br
+	if part.reference_designs	
+		div.row
+			h2= "Reference designs"	
+			div.col-sm-12
+				table.table.table-hover
+					- each d in part.reference_designs
+						tr
+							td= d
+	br
 	if part.specs	
 		div.row
 			h2= "Specifications"	
@@ -56,6 +78,18 @@ block content
 				table.table.table-hover
 					- each attr in part.specs
 						tr
-							td.col-sm-3!= attr.attributeLabel
-							td.col-sm-3!= attr.attributeUnit
-							td.col-sm-6!= attr.attributeValue
+							td.col-sm-3!= attr.metadata.name
+							if attr.metadata.unit
+								td.col-sm-3!= attr.metadata.unit.name
+							else 
+								td.col-sm-3!="-"
+							td.col-sm-6!= attr.value[0]
+	br
+	if part.descriptions	
+		div.row
+			h2= "Descriptions"	
+			div.col-sm-12
+				table.table.table-hover
+					- each d in part.descriptions
+						tr
+							td!= d.replace(new RegExp(";", 'g'), "<br/>")
