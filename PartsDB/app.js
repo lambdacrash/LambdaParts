@@ -407,7 +407,7 @@ app.post('/wizard', function(req, res) {
                 });
             });
     });
-
+    engines.mouserSearch(search.ref, search.brand, search.qty, search.box, function(parts, error, url, sid) {});
 });
 
 //new part

@@ -1,6 +1,7 @@
  var crypto = require('crypto')
  var request = require('request');
  var octopart = require("octopart");
+ var easySoap = require('easysoap');
 
  var farnelapikey = "a6hmms7wrjnnhawpeffurqxz";
  var farnelBaseImage = "http://fr.farnell.com/productimages/farnell/standard";
@@ -81,6 +82,18 @@
      });
  }
 
+ var clientParams = {
+     host: 'api.mouser.com',
+     path: '/service/searchapi.asmx',
+     wsdl: '/service/searchapi.asmx?WSDL',
+     header: [{
+         'ParterID': 'afd744a8-f773-4a0f-997b-a0db3d4718cd'
+     }]
+ };
+ //soap client options
+ var clientOptions = {
+     secure: false //is https or http
+ };
 
  engines.prototype.farnelSearch = function(ref, brand, qty, box, callback) {
      var query = encodeURIComponent(ref + " " + brand);
@@ -104,6 +117,10 @@
                      var prices = body.keywordSearchReturn.products[i].prices;
                      if (prices && prices.length >= 1)
                          price = prices[0].cost
+                     var img = "";
+                     if (body.keywordSearchReturn.products[i].image) {
+                         img = farnelBaseImage + body.keywordSearchReturn.products[i].image.baseName;
+                     }
                      parts.push({
                          "_id": crypto.randomBytes(20).toString('hex'),
                          "sid": sid,
@@ -117,13 +134,41 @@
                          "datasheets": body.keywordSearchReturn.products[i].datasheets,
                          "descr": body.keywordSearchReturn.products[i].displayName,
                          "specs": body.keywordSearchReturn.products[i]["attributes "],
-                         "image": farnelBaseImage + body.keywordSearchReturn.products[i].image.baseName,
+                         "image": img,
                      });
                  }
              }
          }
          callback(parts, error, url, sid);
      });
+ }
+
+ engines.prototype.mouserSearch = function(ref, brand, qty, box, callback) {
+     var query = encodeURIComponent(ref + " " + brand);
+     var url = this.createFarnelUrl(query);
+     var SoapClient = new easySoap.Client(clientParams, clientOptions);
+
+     SoapClient.call({
+         'method': 'soapMethod2',
+         'params': {
+             'mouserPartNumber': 'UA78M33CKCS',
+         }
+     })
+         .done(
+
+             //success
+             function(res) {
+                 res.data // response data as array
+                 console.dir(res.data)
+                 res.response // full response data (including xml)
+                 res.header // response header
+             },
+
+             //method fail
+             function(err) {
+                 console.log(err);
+             }
+     );
  }
 
  exports.engines = engines;
