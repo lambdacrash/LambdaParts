@@ -14,11 +14,8 @@
         "character-parser": "*",
         "jade": "1.0",
         "octopart": "*",
-        "crypto": "*",
         "tar.gz": "*",
         "tingodb": "*",
-        "easysoap": "*",
-        "twitter-bootstrap-node": "*",
         "mongodb": ">= 0.9.6-7"
     }
 }
