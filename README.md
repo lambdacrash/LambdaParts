@@ -19,6 +19,8 @@ First of all, you have to get an [Octopart API key](http://octopart.com/api/home
 5. browse `http://localhost:3000
 
 ## Demo
+![Demo](https://raw.githubusercontent.com/lambdacrash/LambdaParts/master/animation.gif)
+
 
 ## License
 The content of this project itself is licensed under the
