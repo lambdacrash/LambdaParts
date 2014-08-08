@@ -15,10 +15,6 @@ var routes = require('./routes'),
 var app = express();
 var host = "localhost"
 var port = 27017
-var farnellapikey = "a6hmms7wrjnnhawpeffurqxz";
-var farnelBaseImage = "http://fr.farnell.com/productimages/farnell/standard";
-// app.db= new Db('node-mongo-part', new Server(host, port, {safe: true}, {auto_reconnect: true}, {}));
-// app.db.open(function(){});
 var tingo = require("tingodb")({});
 app.db = new tingo.Db('./db/', {});
 

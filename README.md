@@ -1,22 +1,25 @@
-Employee Database
-=====================
+# Electronic parts database
+## Introduction
+This small Node.js application will help you to manage your stock of electronic components. If you are like me, you have parts in your drawers with no solution to easily answer "Where the **** are these 2N3440 transistors?". So, this applications is meant to tell you what you have and where it's stored.
 
-**A sample Employee Database CRUD application with Node.js, Express and MongoDB.**
+## Features
+* wizard helping you to create a new part sheet
+* wizard gathering all the information about your components using Octopart API
+* Octopart API integration for information retrieval 
+* search engine helping you to find your parts
 
-## Requirements
+## Configuration
+First of all, you have to get an [Octopart API key](http://octopart.com/api/home). Once you have it, edit the file `engines.js` (located in the `PartsDB` folder) and replace `octopart_key` with your key (line 10).
 
-* Node
-* Express
-* MongoDB
+## Installation
+1. clone this repository
+2. go into the folder `PartsDB`
+3. type `npm install`
+4. type `node app.js`
+5. browse `http://localhost:3000
 
-## Implementation Instructions
+## Demo
 
-* [A Sample App with Node.js, Express and MongoDB – Part 1](http://blog.ijasoneverett.com/2013/03/a-sample-app-with-node-js-express-and-mongodb-part-1/)
-* [A Sample App with Node.js, Express and MongoDB – Part 2](http://blog.ijasoneverett.com/2013/04/a-sample-app-with-node-js-express-and-mongodb-part-2/)
-
-## Contact
-
-Jason Everett
-
-- https://github.com/ijason
-- http://twitter.com/ijayson66
+## License
+The content of this project itself is licensed under the
+[Creative Commons Attribution 3.0 license](http://creativecommons.org/licenses/by/3.0/us/deed.en_US).

@@ -2,12 +2,12 @@
  var request = require('request');
  var octopart = require("octopart");
 
- var farnelapikey = "key";
+ var farnelapikey = "farnell_key";
  var farnelBaseImage = "http://fr.farnell.com/productimages/farnell/standard";
  var farnelUrl = "http://api.element14.com//catalog/products?term=any%3A";
  var farnelComplement = "&storeInfo.id=uk.farnell.com&resultsSettings.offset=0&resultsSettings.numberOfResults=25&resultsSettings.refinements.filters=&resultsSettings.responseGroup=large&callInfo.omitXmlSchema=false&callInfo.callback=&callInfo.responseDataFormat=json&callinfo.apiKey=";
 
- var octopartapikey = "dc6360bd";
+ var octopartapikey = "octopart_key";
  var octopartBaseImage = "";
  var octopartUrl = "http://octopart.com/api/v3/parts/search?callback=?&apikey=";
  var octopartComplement = "&start=0&limit=25";
