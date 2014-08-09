@@ -1,12 +1,19 @@
 # Electronic parts database
 ## Introduction
-This small Node.js application will help you to manage your stock of electronic components. If you are like me, you have parts in your drawers with no solution to easily answer "Where the **** are these 2N3440 transistors?". So, this applications is meant to tell you what you have and where it's stored.
+This small Node.js application will help you to manage your stock of electronic parts. If you are like me, you have parts in your drawers with no solution to easily answer "Where the **** are these 2N3440 transistors?". So, this application is meant to tell you what you have and where it's stored.
 
 ![Demo](https://raw.githubusercontent.com/lambdacrash/LambdaParts/master/animation.gif)
 
 ## Features
 * wizard helping you to create a new part sheet
-* wizard gathering all the information about your components using Octopart API
+* wizard gathering all the information about your parts using Octopart API
+..* description
+..* brand
+..* manufacturer
+..* CAD models
+..* reference design
+..* data sheets
+..* picture
 * Octopart API integration for information retrieval 
 * search engine helping you to find your parts
 
