@@ -7,13 +7,13 @@ This small Node.js application will help you to manage your stock of electronic 
 ## Features
 * wizard helping you to create a new part sheet
 * wizard gathering all the information about your parts using Octopart API
-..* description
-..* brand
-..* manufacturer
-..* CAD models
-..* reference design
-..* data sheets
-..* picture
+  * description
+  * brand
+  * manufacturer
+  * CAD models
+  * reference design
+  * data sheets
+  * picture
 * Octopart API integration for information retrieval 
 * search engine helping you to find your parts
 
