@@ -16,20 +16,22 @@ body
 				div(class="collapse navbar-collapse" id="bs-example-navbar-collapse-1")
 					ul(class="nav navbar-nav")
 						li
-							#[a(href="/wizard", class="btn btn-lg") #[span.glyphicon.glyphicon-qrcode]]
+							#[a(href="/wizard", class="btn btn-lg", data-toggle="tooltip", data-placement="top", title="", data-original-title="Part Wizard") #[span.glyphicon.glyphicon-qrcode]]
 							//- a(href="/wizard") Wizard
 						li
-							#[a(href="/", class="btn btn-lg") #[span.glyphicon.glyphicon-th-list]]
+							#[a(href="/", class="btn btn-lg", data-toggle="tooltip", data-placement="top", title="", data-original-title="List all parts") #[span.glyphicon.glyphicon-th-list]]
 							//- a(href="/") List
 						li
-							#[a(href="/backup", class="btn btn-lg", title="Create a backup in DB directory") #[span.glyphicon.glyphicon-compressed]]
+							#[a(href="/backup", class="btn btn-lg", data-toggle="tooltip", data-placement="top", title="", data-original-title="Create a backup in DB directory") #[span.glyphicon.glyphicon-compressed]]
 							//- a(href="/") List
 
 					div.col-sm-3.col-md-3.pull-right
 						form.navbar-form(role="search", action="/search", method="post")
 							div.input-group
-								input(type="text", class="form-control", placeholder="Search", name="term", id="term")
+								input(type="text", class="form-control", placeholder="Search", name="term", id="term", data-toggle="tooltip", data-placement="top", title="", data-original-title="Search by reference, description, ...")
 								div.input-group-btn
 									#[button(class="btn btn-default" type="submit") #[span.glyphicon.glyphicon-search]]
 		block content
 		block footscript
+		script
+			$('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
