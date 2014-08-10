@@ -167,32 +167,4 @@
      });
  }
 
- engines.prototype.mouserSearch = function(ref, brand, qty, box, callback) {
-     var query = encodeURIComponent(ref + " " + brand);
-     var url = this.createFarnelUrl(query);
-     var SoapClient = new easySoap.Client(clientParams, clientOptions);
-
-     SoapClient.call({
-         'method': 'soapMethod2',
-         'params': {
-             'mouserPartNumber': 'UA78M33CKCS',
-         }
-     })
-         .done(
-
-             //success
-             function(res) {
-                 res.data // response data as array
-                 console.dir(res.data)
-                 res.response // full response data (including xml)
-                 res.header // response header
-             },
-
-             //method fail
-             function(err) {
-                 console.log(err);
-             }
-     );
- }
-
  exports.engines = engines;
