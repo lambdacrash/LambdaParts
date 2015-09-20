@@ -26,7 +26,7 @@ First of all, you have to get an [Octopart API key](http://octopart.com/api/home
 3. type `npm install`
 4. go into the folder `cd PartsDB`
 5. type `node app.js`
-6. browse `http://localhost:3000
+6. browse `http://localhost:3000`
 
 ## License
 The content of this project itself is licensed under the
